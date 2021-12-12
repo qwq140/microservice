@@ -1,0 +1,5 @@
+pluginManagement{
+    rootProject.name='microservice'
+    include ':discovery-service'
+}
+

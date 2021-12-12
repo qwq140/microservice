@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        def kotlinVersion = '1.5.10'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.6.1")
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    }
+}
+
+subprojects {
+    group = 'com.example'
+    version = '1.0'
+
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+    apply plugin: 'kotlin-jpa'
+    apply plugin: 'kotlin-spring'
+    apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+    }
+
+    def springCloudVersion = "2021.0.1"
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+        }
+    }
+
+    dependencies {
+        def kotlinVersion = '1.5.21'
+        implementation("org.springframework.cloud:spring-cloud-starter")
+        implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
+        implementation("org.springframework.cloud:spring-cloud-starter-config")
+        implementation("org.springframework.boot:spring-boot-starter-actuator")
+        implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp")
+        implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+        implementation("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+        developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+        compileOnly("org.projectlombok:lombok")
+        annotationProcessor("org.projectlombok:lombok")
+        runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+
+        testCompileOnly 'org.projectlombok:lombok:1.18.12'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
